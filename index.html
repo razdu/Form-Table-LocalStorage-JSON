@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <form>
+        <fieldset>
+            <legend>Add Contacts</legend>
+            <label for="fname">First Name</label><br>
+            <input type="text" name="fname" id="" placeholder="Enter first name..."><br>
+            <label for="lname">Last Name</label><br>
+            <input type="text" name="lname" id="" placeholder="Enter last name..."><br>
+            <label for="phone">Phone</label><br>
+            <input type="tel" name="phone" id="" placeholder="Enter phone number..."><br>
+            <label for="email">Email</label><br>
+            <input type="email" name="email" id="" placeholder="Enter e-mail..."><br>
+            <input type="button" onclick="addRecord()" value="Add Contact"><br>
+        </fieldset>
+    </form>
+    <table width="100%" style='padding:10px;margin-top: 10px;' id="Contacts" class="table">
+        <thead>
+            <tr>
+                <th width="30%" colspan="2">Name</th>
+                <th width="15%">Phone</th>
+                <th width="30%">Email</th>
+                <th width="10%">ID</th>
+                <th width="5%">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="contactsData">
+        </tbody>
+    </table>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

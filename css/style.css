@@ -1,0 +1,43 @@
+body{
+    font-size: 1.2em;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, Courier, monospace;
+}
+legend{
+    font-weight: 800;
+    font-size: 1.5em;
+}
+form{
+    position:relative
+}
+
+form input{
+    width: 80%;
+    border: 2px solid skyblue;
+    border-radius: 7px;
+    padding: 5px;
+    margin-bottom: 15px;
+}
+form input[type=text],[type=tel],[type=email]{
+    font-family:cursive;
+    padding: 10px;
+    font-size: 1em;
+}
+form input:focus{
+    border-color: blue;
+    outline:none
+}
+
+input[type=button]{
+    background-color: lightblue;
+    border: none;
+    color: darkblue;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 2px;
+    margin: 5px;
+    box-shadow:darkblue 2px 2px 5px;
+}
+input[type=button]:hover{
+    box-shadow: unset;
+    border: 1px solid darkblue;
+}
