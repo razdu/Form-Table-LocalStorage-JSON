@@ -41,3 +41,6 @@ input[type=button]:hover{
     box-shadow: unset;
     border: 1px solid darkblue;
 }
+th,td {
+    text-align: center;
+}
