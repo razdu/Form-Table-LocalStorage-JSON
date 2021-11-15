@@ -10,28 +10,30 @@
 </head>
 
 <body>
-    <form>
-        <fieldset>
-            <legend>Add Contacts</legend>
-            <label for="fname">First Name</label><br>
-            <input type="text" name="fname" id="" placeholder="Enter first name..."><br>
-            <label for="lname">Last Name</label><br>
-            <input type="text" name="lname" id="" placeholder="Enter last name..."><br>
-            <label for="phone">Phone</label><br>
-            <input type="tel" name="phone" id="" placeholder="Enter phone number..."><br>
-            <label for="email">Email</label><br>
-            <input type="email" name="email" id="" placeholder="Enter e-mail..."><br>
-            <input type="button" onclick="onSubmit()" value="Add Contact"><br>
-        </fieldset>
-    </form>
-    <table width="100%" style='padding:10px;margin-top: 10px;' id="contacts-tbl" class="table">
+    <fieldset>
+        <legend>Add Contacts</legend>
+        <label for="fname">First Name</label><br>
+        <input type="text" name="fname" id="" placeholder="Enter first name..."><br>
+        <label for="lname">Last Name</label><br>
+        <input type="text" name="lname" id="" placeholder="Enter last name..."><br>
+        <label for="phone">Phone</label><br>
+        <input type="tel" name="phone" id="" placeholder="Enter phone number..."><br>
+        <label for="email">Email</label><br>
+        <input type="email" name="email" id="" placeholder="Enter e-mail..."><br>
+        <button onclick="onSubmit()">Add Contact</button>
+        <button onclick="getFromLocal('contacts')">Load local Contacts</button>
+        <div id="errorMsg" class="hide">
+            <h4>Error Founds:</h4>
+        </div>
+    </fieldset>
+    <table id="contacts-tbl" class="table">
         <thead>
             <tr>
                 <th width="30%" colspan="2">Name</th>
-                <th width="15%">Phone</th>
+                <th width="10%">Phone</th>
                 <th width="30%">Email</th>
                 <th width="10%">ID</th>
-                <th width="5%">Actions</th>
+                <th width="10%">Actions</th>
             </tr>
         </thead>
         <tbody id="contactsData">
