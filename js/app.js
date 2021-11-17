@@ -51,7 +51,13 @@ function getFormData() {
     let dataArr = [];
     inputData.forEach((inpt) => {
         //console.log(inpt.value);
-        dataArr.push(inpt.value)
+        if(inpt==''){
+            //if empty string
+            errMsg.push = `${inpt.name} can't be empty`
+        }else{
+            //not empty
+            dataArr.push(inpt.value)
+        }
     })
     //dataArr.pop();
     console.log(dataArr);
