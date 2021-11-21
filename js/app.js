@@ -1,146 +1,176 @@
 let tbl = document.querySelector('#contacts-tbl tbody');
-const contacts = {},
-    favContacts = {}
+const contactKeys = ['fname', 'lname', 'phone', 'email', 'id'],
+	ls = localStorage;
 let contactID = 0,
-    selectedRow = null;
-//addRecord(['first', 'last', 'phone', 'email', 'ID']);
-const ls = localStorage;
+	prevID,
+	errMsg = [],
+	contacts = [],
+	selectedRow = null;
 setContactID();
+loadFromLocal();
 
 function setContactID() {
-    console.log('processing ID..')
-    // get from local
-    let cID = getFromLocal('contactID', contactID);
-    //console.log('cID = ', cID);
-    if (contactID != 0 || cID) {
-        //if this app ID not zero OR have local value
-        console.log('contactID not zero...take highest ID!');
-        //console.log('contactID = ', contactID);
-        contactID = contactID > cID ? contactID : cID;
-        addLocal('contactID', contactID)
-    } else if (contactID == 0) {
-        console.log('contactID is ' + contactID);
-        //console.log('contactID = ', contactID);
-    } else {
-        console.log('error');
-    }
-    console.log(`got ID [${contactID}]`);
-    return contactID
+	console.log('processing ID..')
+	//get from local
+	let item = 'contactID';
+	let cID = getFromLocal(item, false);
+	if (contactID != 0 || contactID != cID) {
+		//if this app ID not zero OR have local value
+		contactID = contactID > cID ? contactID : cID;
+		addLocal(item, contactID);
+	} else if (contactID == cID) {
+		//addLocal(item, contactID);
+		console.log('local updated');
+	} else {
+		console.log('error');
+	}
+
+	console.log(`got ID [${contactID}]`);
+	return contactID
 }
 
-function onSubmit() {
-    console.log('submitted!');
-    let formData = getFormData();
-    console.log(formData.length);
-    formData[formData.length] = setContactID();
-    if (selectedRow == null) {
-        //Add new record
-        addRecord(formData);
+function onSubmit(selectedRow=null) {
+	console.log('submitted!');
+	let formData = getFormData();
+	let item = 'contacts';
+	if (formData) {
+		formData['id'] = ++contactID;
+		setContactID();
+		console.log('got -->', formData);
+		if (selectedRow == null) {
+			//Add new record
+			addRecord(formData);
+			console.log('add record: ', formData);
+			contacts = getFromLocal('contacts', contacts);
+			contacts.push(formData);
+			addLocal('contacts', contacts);
+			//keep to local
+			//addLocal(formData);
+		} else {
+			//update this record
+			updateRecord();
+		}
+	}
 
-        //keep to local
-        //addLocal(formData);
-
-
-    } else {
-        //update this record
-    }
 }
 
 function getFormData() {
-    let inputData = document.querySelectorAll('input');
-    let dataArr = [];
-    inputData.forEach((inpt) => {
-        //console.log(inpt.value);
-        if(inpt==''){
-            //if empty string
-            errMsg.push = `${inpt.name} can't be empty`
-        }else{
-            //not empty
-            dataArr.push(inpt.value)
-        }
-    })
-    //dataArr.pop();
-    console.log(dataArr);
-    resetInputs(inputData)
-    return dataArr
+	let inputData = document.querySelectorAll('input');
+	let dataObj = {};
+	errMsg = [];
+	console.log('collecting: ', inputData);
+	inputData.forEach((inpt) => {
+		if (inpt.value == '') {
+			//if empty string
+			errMsg.push(`${inpt.name} can't be empty`);
+		} else {
+			//not empty
+			dataObj[inpt.name] = inpt.value;
+		}
+		console.log(inpt.value);
+
+	});
+	console.log(errMsg.length == 0);
+	if (errMsg.length == 0) {
+		//if no errors found
+		console.log('no errors');
+
+		resetInputs(inputData);
+		showErrors(false);
+	} else {
+		showErrors(errMsg);
+		return false
+	}
+	console.log('obj-->' + dataObj);
+	console.log('contacts:\n' + contacts);
+
+	return dataObj
 }
 
 function resetInputs(inputs) {
-    inputs.forEach((inpt) => {
-        inpt.value = "";
-    })
+	inputs.forEach((inpt) => {
+		inpt.value = "";
+	})
+}
+
+function loadFromLocal() {
+	contacts = getFromLocal('contacts', false);
+	contacts.forEach(c => {
+		addRecord(c);
+	});
+	console.log('local loaded');
 }
 
 function addRecord(formData) {
-    let row = tbl.insertRow(tbl.length);
-    console.log(row);
-    let dataCells = [];
-    formData.forEach((d, i) => {
-        dataCells[i] = row.insertCell()
-        dataCells[i].innerHTML = d;
-        i++;
-    })
-    actCell = row.insertCell()
-    actCell.innerHTML = `<button onclick='editRecord(this)'>Edit</button>
+	let row = tbl.insertRow(tbl.length);
+	let dataCells = [];
+	for (let i = 0; i < contactKeys.length; i++) {
+		dataCells[i] = row.insertCell()
+		dataCells[i].innerHTML = formData[contactKeys[i]];
+	}
+	/*formData.forEach((d, i) => {
+		dataCells[i] = row.insertCell()
+		dataCells[i].innerHTML = d;
+		i++;
+	})*/
+	actCell = row.insertCell()
+	actCell.innerHTML = `<button onclick='editRecord(this)'>Edit</button>
     <button onclick='removeRecord(this)'>X</button>`
-    //console.log(dataCells);
-    return
+	//console.log(dataCells);
+	return
 }
 
-function editRecord() {
-    console.log('to edit...');
-    //selectedRow = 
+function editRecord(data) {
+	console.log('to edit...');
+	//selectedRow = 
 }
 
 function updateRecord() {
-    console.log('updated...');
+	console.log('updated...');
 }
 
 function removeRecord() {
-    console.log('removed');
+	console.log('removed');
 }
 
 function addLocal(item, data) {
-    let obj = {};
-    obj[item] = data;
-    let local = JSON.stringify(obj);
-    ls.setItem(item, local);
-    return obj
+	//add to locall an item with the name inside 'item' with the 'data' content
+	let local = JSON.stringify(data);
+	console.log('set item: ' + local);
+	ls.setItem(item, local);
 }
 
 function getFromLocal(item, data) {
-    console.log('searching local ' + item);
-    let local = ls.getItem(item);
-    if (local) {
-        //if localize
-        console.log('Found!');
-        console.log('get ' + item + ' value...');
-        data = JSON.parse(local);
-        console.log('data --> ', data);
-    } else {
-        //if NOT localize
-        console.log('NOT found!');
-        console.log('set local ' + item);
-        data = addLocal(item, data);
-        console.log('data --> ', data);
-    }
-    console.log(`got from local < ${data[item]} > \n\t\tDONE!`);
-    return data[item]
+	//get from local 'item' obj
+	console.log('searching local ' + item);
+	let local = ls.getItem(item);
+	if (local) {
+		//if localize=if lpcal not empty string
+		console.log('Found... ' + local);
+		data = JSON.parse(local);
+	} else if (data) {
+		//if NOT localize=if local empy string
+		console.log('NOT found!');
+		addLocal(item, data);
+	}
+	console.log(`got from local < ${item} > \n\t\tDONE!`);
+	return data
 }
-toggleClass(['first', 'last']);
 
-function toggleClass(errMsg = false) {
-    let elem = document.querySelector('#errorMsg');
-    //debugger
-    if (errMsg) {
-        elem.classList.remove('hide');
-        errMsg.forEach((err) => {
-            let msg = document.createElement('p');
-            msg.innerHTML = err;
-            elem.appendChild(msg);
-        })
-    } else {
-        elem.classList.add('hide');
-    }
-    console.log('no errors found..');
+function showErrors(errMsg) {
+	let errBox = document.querySelector('#errorBox');
+	let elem = document.querySelector('#errorMsg');
+	elem.innerHTML = '';
+	if (errMsg) {
+		errBox.classList.remove('hide');
+		errMsg.forEach((err) => {
+			let msg = document.createElement('p');
+			msg.innerHTML = err;
+			elem.appendChild(msg);
+		})
+	} else {
+		errBox.classList.add('hide');
+		console.log('no errors found..');
+	}
+
 }
