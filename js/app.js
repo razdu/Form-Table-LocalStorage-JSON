@@ -2,11 +2,11 @@ let tbl = document.querySelector('#contacts-tbl tbody');
 const contactKeys = ['fname', 'lname', 'phone', 'email', 'id'],
 	ls = localStorage;
 let contactID = 0,
-	prevID,
 	errMsg = [],
 	contacts = [],
 	selectedRow = null;
 setContactID();
+
 loadFromLocal();
 
 function setContactID() {
@@ -20,7 +20,7 @@ function setContactID() {
 		addLocal(item, contactID);
 	} else if (contactID == cID) {
 		//addLocal(item, contactID);
-		console.log('local updated');
+		//console.log('local updated');
 	} else {
 		console.log('error');
 	}
@@ -29,7 +29,7 @@ function setContactID() {
 	return contactID
 }
 
-function onSubmit(selectedRow=null) {
+function onSubmit(selectedRow = null) {
 	console.log('submitted!');
 	let formData = getFormData();
 	let item = 'contacts';
@@ -94,11 +94,15 @@ function resetInputs(inputs) {
 }
 
 function loadFromLocal() {
-	contacts = getFromLocal('contacts', false);
-	contacts.forEach(c => {
-		addRecord(c);
-	});
+	local = getFromLocal('contacts', false);
+	if (local) {
+		contacts.forEach(c => {
+			addRecord(c);
+		});
 	console.log('local loaded');
+	}else{
+		console.log('nothing to load');
+	}
 }
 
 function addRecord(formData) {
