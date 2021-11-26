@@ -4,9 +4,8 @@ const contactKeys = ['fname', 'lname', 'phone', 'email', 'id'],
 let contactID = 0,
 	errMsg = [],
 	contacts = [],
-	selectedRow = null;
+	selectedRow;
 setContactID();
-
 loadFromLocal();
 
 function setContactID() {
@@ -27,6 +26,18 @@ function setContactID() {
 
 	console.log(`got ID [${contactID}]`);
 	return contactID
+}
+
+function loadFromLocal() {
+	local = getFromLocal('contacts', false);
+	if (local) {
+		local.forEach(c => {
+			addRecord(c);
+		});
+	console.log('local loaded');
+	}else{
+		console.log('nothing to load');
+	}
 }
 
 function onSubmit(selectedRow = null) {
@@ -93,44 +104,25 @@ function resetInputs(inputs) {
 	})
 }
 
-function loadFromLocal() {
-	local = getFromLocal('contacts', false);
-	if (local) {
-		contacts.forEach(c => {
-			addRecord(c);
-		});
-	console.log('local loaded');
-	}else{
-		console.log('nothing to load');
-	}
-}
-
 function addRecord(formData) {
-	let row = tbl.insertRow(tbl.length);
+	let row = tbl.insertRow(tbl.length-1);
 	let dataCells = [];
 	for (let i = 0; i < contactKeys.length; i++) {
 		dataCells[i] = row.insertCell()
 		dataCells[i].innerHTML = formData[contactKeys[i]];
 	}
-	/*formData.forEach((d, i) => {
-		dataCells[i] = row.insertCell()
-		dataCells[i].innerHTML = d;
-		i++;
-	})*/
 	actCell = row.insertCell()
-	actCell.innerHTML = `<button onclick='editRecord(this)'>Edit</button>
+	actCell.innerHTML = `<button onclick='updateRecord(this)'>Edit</button>
     <button onclick='removeRecord(this)'>X</button>`
 	//console.log(dataCells);
 	return
 }
 
-function editRecord(data) {
-	console.log('to edit...');
-	//selectedRow = 
-}
-
-function updateRecord() {
+function updateRecord(elem) {
 	console.log('updated...');
+	console.log(elem.parentElement.parentElement);
+	selectedRow=elem.parentElement.parentElement.rowIndex;
+	console.log(selectedRow);
 }
 
 function removeRecord() {
