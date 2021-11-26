@@ -44,8 +44,6 @@ function onSubmit() {
 	if (selectedRow == null) {
 		formData['id'] = ++contactID;
 		setContactID();
-
-
 		//Add new record
 		//addRecord(formData);
 		contacts = getLocal('contacts', contacts);
@@ -55,8 +53,10 @@ function onSubmit() {
 	} else {
 		//update this record
 		//updateRecord();
-		console.log(selectedRow);
-		
+		let rowID=tbl.rows[selectedRow].cells[4]
+		//console.log(rowData);
+		updateLocal(rowID,formData)
+		renderTable()
 	}
 }
 
@@ -73,7 +73,7 @@ function getFormData() {
 		}
 	});
 	if (errMsg.length == 0) {
-		resetInputs(inputData);
+		resetForm(inputData);
 		showErrors(false);
 		return dataObj
 	} else {
@@ -91,7 +91,7 @@ function setFormData(elem) {
 	});
 }
 
-function resetInputs(inputs) {
+function resetForm(inputs) {
 	inputs.forEach((inpt) => {
 		inpt.value = "";
 	})
@@ -121,9 +121,19 @@ function removeRecord() {
 	console.log('removed');
 }
 
-function updateLocal(elem){
-	let cID = elem[5].innerHTML;
-	console.log(cID);
+function updateLocal(id,data){
+	let item = 'contacts';
+	let cID = id.innerHTML;
+	contacts = getLocal(item)
+	let rowIndex = contacts.findIndex(obj=> obj.id==cID)
+	console.log(data);
+	//console.log(contacts[rowIndex]);
+	//let cObj = contacts[rowIndex];
+	for(let i=0;i<contactKeys.length-1;i++){
+		contacts[rowIndex][contactKeys[i]] = data[contactKeys[i]];
+		}
+	console.log(contacts[rowIndex]);
+	setLocal(item,contacts)
 }
 
 function setLocal(item, data) {
