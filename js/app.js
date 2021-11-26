@@ -45,6 +45,7 @@ function onSubmit() {
 		formData['id'] = ++contactID;
 		setContactID();
 
+
 		//Add new record
 		//addRecord(formData);
 		contacts = getLocal('contacts', contacts);
